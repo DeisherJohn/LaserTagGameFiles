@@ -2,7 +2,6 @@
 """ Zoomz laser tag program
 
 Created by: John Deisher
-https://github.com/DeisherJohn/LaserTagGameFiles.git
 
 """
 
@@ -124,13 +123,11 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 	"""analyze packet captures and print out kills"""
 	global baseKill
 	global winner
-	global gameType
 
 	blue=0
 	red=0
 	results=np.zeros(50)
 
-	totalMatrix = np.zeros((30,30))
 	blueMatrix = np.zeros((14,14))
 	redMatrix = np.zeros((14,14))
 
@@ -144,6 +141,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 	for gunNumber in range(50):
 		morgue=[]
 		for packet in packetHandler.captures:
+
 			if len(packet.frame.msdu) < 5: 
 				continue
 			if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and gunNumber == packet.frame.msdu[4]:
@@ -151,13 +149,13 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 				morgue.append([packet.frame.msdu[3], packet.frame.msdu[4], packet.frame.timestamp])
         
 		if len(morgue) == 0: 
-			continue # no kills
+			continue # gun not in
 		
 		morgue.sort() # kills sorted by gun
 
-		timeDeath = np.diff(np.array(morgue)[:,2]) # time between kills
-		gunKiller = np.array(morgue)[:,1] #array of gun killers
-		gunKilled = np.array(morgue)[:,0] # array of guns killed
+		timeDeath=np.diff(np.array(morgue)[:,2]) # time between kills
+		gunKiller = np.array(morgue)[:,1]
+		gunKilled=np.array(morgue)[:,0] # array of guns killed
 
 
     	## look at list of guns killed and see if timestamps are less than 0.1 sec. apart
@@ -218,7 +216,6 @@ def main():
 	
 	args = arg_parser()
 	args.channel=int(12)
-	global gameType
 	#log_init()
 
 	#logger.info('Starting Logger')
@@ -292,7 +289,7 @@ def main():
 			zoomzGun.setupGun(gunList)
 		elif MM == 'c' or MM == 'C':
 			#Do gun options here
-			startGame(packetHandler, gunList)
+			startGame(packetHandler,  gunList)
 		elif MM == 'd' or MM == 'D':
 			#Do gun options here
 			zoomzGun.endGame(gunList)
@@ -301,7 +298,7 @@ def main():
 			os.system('clear')
 			return 0
 		else: 
-			startGame(packetHandler, gunList)
+			startGame(packetHandler,  gunList)
 
 
 if __name__ == '__main__': 
