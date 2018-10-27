@@ -153,7 +153,6 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 			continue # gun not in
 		
 		morgue.sort() # kills sorted by gun
-		print(morgue)
 
 		timeDeath=np.diff(np.array(morgue)[:,2]) # time between kills
 		gunKiller = np.array(morgue)[:,1]
