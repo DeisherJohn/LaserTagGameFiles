@@ -159,6 +159,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 		gunKiller = np.array(morgue)[:,1]
 		gunKilled=np.array(morgue)[:,0] # array of guns killed
 
+		print(timeDeath)
 
     	## look at list of guns killed and see if timestamps are less than 0.1 sec. apart
         ## if so, then they're the same kill, so don't double count
@@ -178,13 +179,13 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 					
 					if gunKiller[kill] % 2 == 0:
 						#blue killer
+						killed = int((gunKiller[kill] // 2)+1)
+						killer = int(gunKilled[kill] // 2)
 						blueMatrix[int((gunKiller[kill] // 2)), int((gunKilled[kill] // 2)+1)] += 1
 					else:
 						killer = int((gunKiller[kill] // 2)+1)
 						killed = int(gunKilled[kill] // 2)
-						
-						print(killer)
-						print(killed)
+
 						redMatrix[killer, killed] += 1
 				else:
 					baseKill = True
