@@ -5,7 +5,7 @@ import serial,time,sys,os
 def newGame(gunList=[]):
 	"""list of gun numbers (integers); if this is empty, then new game all guns"""
 
-	ser = serial.Serial('/dev/tty.usbserial-DA01MHIK',19200)
+	ser = serial.Serial('/dev/ttyUSB0',19200)
 	xbee = XBee(ser)
 
 	if len(gunList) == 0: 
@@ -26,7 +26,7 @@ def newGame(gunList=[]):
 def endGame(gunList=[]):
 	"""list of gun numbers (integers); if this is empty, then new game all guns"""
 
-	ser = serial.Serial('/dev/tty.usbserial-DA01MHIK',19200)
+	ser = serial.Serial('/dev/ttyUSB0',19200)
 	xbee = XBee(ser)
 
 	if len(gunList) == 0: 

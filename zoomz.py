@@ -2,6 +2,7 @@
 """ Zoomz laser tag program
 
 Created by: John Deisher
+https://github.com/DeisherJohn/LaserTagGameFiles.git
 
 """
 
@@ -40,6 +41,7 @@ from pyCCsnifferOriginal import CustomAssertFrame
 
 baseKill = False
 winner = -1
+gameType = 'NULL'
 
 def startGame(packetHandler, gunList = []):
 	
@@ -122,11 +124,13 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 	"""analyze packet captures and print out kills"""
 	global baseKill
 	global winner
+	global gameType
 
-	blue=0;red=0
+	blue=0
+	red=0
 	results=np.zeros(50)
-	killMatrix = np.zeros((10,10))
 
+	totalMatrix = np.zeros((30,30))
 	blueMatrix = np.zeros((14,14))
 	redMatrix = np.zeros((14,14))
 
@@ -137,13 +141,9 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 		redMatrix[x,0] = (x * 2) - 1
 		redMatrix[0,x] = x * 2
 
-
-
-	#killMatrix = [[0 for x in range(30)] for y in range(30)]
 	for gunNumber in range(50):
 		morgue=[]
 		for packet in packetHandler.captures:
-
 			if len(packet.frame.msdu) < 5: 
 				continue
 			if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and gunNumber == packet.frame.msdu[4]:
@@ -151,13 +151,13 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 				morgue.append([packet.frame.msdu[3], packet.frame.msdu[4], packet.frame.timestamp])
         
 		if len(morgue) == 0: 
-			continue # gun not in
+			continue # no kills
 		
 		morgue.sort() # kills sorted by gun
 
-		timeDeath=np.diff(np.array(morgue)[:,2]) # time between kills
-		gunKiller = np.array(morgue)[:,1]
-		gunKilled=np.array(morgue)[:,0] # array of guns killed
+		timeDeath = np.diff(np.array(morgue)[:,2]) # time between kills
+		gunKiller = np.array(morgue)[:,1] #array of gun killers
+		gunKilled = np.array(morgue)[:,0] # array of guns killed
 
 
     	## look at list of guns killed and see if timestamps are less than 0.1 sec. apart
@@ -170,7 +170,6 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 				#double kill found
 				add = False
 			else:
-				#killMatrix[gunKiller[kill], gunKilled[kill]] += 1
 				confirmedKills += 1
 				results[gunNumber]=confirmedKills
 
@@ -190,9 +189,6 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 					else:
 						#Red team wins
 						winner = 1
-
-
-
 
 		if gunNumber % 2 == 0:
 			blue += confirmedKills
@@ -217,12 +213,12 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 	else: 
 		print 'too many best scores!'
 
-	#print killMatrix
 	
 def main():
 	
 	args = arg_parser()
 	args.channel=int(12)
+	global gameType
 	#log_init()
 
 	#logger.info('Starting Logger')
@@ -290,7 +286,7 @@ def main():
 			startGame(packetHandler, gunList)
 		elif MM == 'a' or MM == 'A':
 			#do gamemode select here
-			zoomzGun.setupGame(gunList)
+			gameType = zoomzGun.setupGame(gunList)
 		elif MM == 'b' or MM == 'B':
 			#Do gun options here
 			zoomzGun.setupGun(gunList)
@@ -305,7 +301,7 @@ def main():
 			os.system('clear')
 			return 0
 		else: 
-			zoomzGun.newGame(gunList)
+			startGame(packetHandler, gunList)
 
 
 if __name__ == '__main__': 
