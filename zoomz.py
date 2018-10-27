@@ -141,8 +141,6 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 	for gunNumber in range(50):
 		morgue=[]
 		for packet in packetHandler.captures:
-			print(packet)
-
 			if len(packet.frame.msdu) < 5: 
 				continue
 			if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and gunNumber == packet.frame.msdu[4]:
