@@ -49,7 +49,7 @@ def programGun(gunList,code,ng=False):
 	gunList is a list of guns to send code to; if gunList is empty, send to all guns
 	ng = false; if true, send new game"""
 
-	ser = serial.Serial('/dev/tty.usbserial-DA01MHIK',19200)
+	ser = serial.Serial('/dev/ttyUSB0',19200)
 	xbee = XBee(ser)
 
 	pref='\x40\x06\x00'
