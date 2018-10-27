@@ -179,6 +179,8 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 						#blue killer
 						blueMatrix[(gunKiller[kill]//2), (gunKilled[kill]//2)+1] += 1
 					else:
+						print((gunKiller[kill]//2)+1)
+						print( (gunKilled[kill]//2))
 						redMatrix[(gunKiller[kill]//2)+1, (gunKilled[kill]//2)] += 1
 				else:
 					baseKill = True
