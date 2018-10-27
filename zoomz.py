@@ -141,6 +141,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 	for gunNumber in range(50):
 		morgue=[]
 		for packet in packetHandler.captures:
+			print(packet)
 
 			if len(packet.frame.msdu) < 5: 
 				continue
@@ -152,6 +153,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 			continue # gun not in
 		
 		morgue.sort() # kills sorted by gun
+		print(morgue)
 
 		timeDeath=np.diff(np.array(morgue)[:,2]) # time between kills
 		gunKiller = np.array(morgue)[:,1]
