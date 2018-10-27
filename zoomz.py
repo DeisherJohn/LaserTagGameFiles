@@ -128,6 +128,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 	red=0
 	results=np.zeros(50)
 
+	totalMatrix = np.zeros((30,30))
 	blueMatrix = np.zeros((14,14))
 	redMatrix = np.zeros((14,14))
 
@@ -151,6 +152,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 			continue # gun not in
 		
 		morgue.sort() # kills sorted by gun
+		print(morgue)
 
 		timeDeath=np.diff(np.array(morgue)[:,2]) # time between kills
 		gunKiller = np.array(morgue)[:,1]
@@ -184,6 +186,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 						killed = int(gunKilled[kill] // 2)
 
 						redMatrix[killer, killed] += 1
+					totalMatrix[gunKiller[kill], gunKilled[kill]]
 				else:
 					baseKill = True
 
@@ -208,6 +211,8 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 
 	print '\nred kills: %i ' % red
 	print 'blue kills: %i ' % blue
+
+	print(totalMatrix)
 
     # print out high score    
 	ind=np.where(results == np.max(results))[0]
