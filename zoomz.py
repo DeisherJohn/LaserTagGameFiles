@@ -175,13 +175,17 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 
 			if add or kill == 0:
 				if gunKilled[kill] < 30:
+					
 					if gunKiller[kill] % 2 == 0:
 						#blue killer
 						blueMatrix[int((gunKiller[kill] // 2)), int((gunKilled[kill] // 2)+1)] += 1
 					else:
-						print(int(gunKiller[kill] // 2)+1)
-						print(int(gunKilled[kill] // 2))
-						redMatrix[int((gunKiller[kill] // 2)+1), ((gunKilled[kill] // 2))] += 1
+						killer = int((gunKiller[kill] // 2)+1)
+						killed = int(gunKilled[kill] // 2)
+						
+						print(killer)
+						print(killed)
+						redMatrix[killer, killed] += 1
 				else:
 					baseKill = True
 
