@@ -119,7 +119,7 @@ def startGame(packetHandler, gunList = []):
 
 
 
-def analyzePackets(packetHandler, prntMatrix = ''):
+def (packetHandler, prntMatrix = ''):
 	"""analyze packet captures and print out kills"""
 	global baseKill
 	global winner
@@ -143,6 +143,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 		morgue=[]
 		for packet in packetHandler.captures:
 			if len(packet.frame.msdu) < 5: 
+				print(packet)
 				continue
 			if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and gunNumber == packet.frame.msdu[4]:
                 # append time and gun killed to list
@@ -180,7 +181,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 						#blue killer
 						killed = int((gunKiller[kill] // 2)+1)
 						killer = int(gunKilled[kill] // 2)
-						blueMatrix[int((gunKiller[kill] // 2)), int((gunKilled[kill] // 2)+1)] += 1
+						blueMatrix[killer, killed] += 1
 					else:
 						killer = int((gunKiller[kill] // 2)+1)
 						killed = int(gunKilled[kill] // 2)
