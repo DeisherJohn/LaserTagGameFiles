@@ -119,7 +119,7 @@ def startGame(packetHandler, gunList = []):
 
 
 
-def (packetHandler, prntMatrix = ''):
+def analyzePackets(packetHandler, prntMatrix = ''):
 	"""analyze packet captures and print out kills"""
 	global baseKill
 	global winner
