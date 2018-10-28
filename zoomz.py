@@ -164,17 +164,20 @@ def analyzePackets(packetHandler, prntMatrix = ''):
     	## look at list of guns killed and see if timestamps are less than 0.1 sec. apart
         ## if so, then they're the same kill, so don't double count
 		confirmedKills=1
-		for kill in range(len(timeDeath)):	
+		for kill in range(len(gunKiller)):	
 			add = True
 
 			if gunKilled[kill] == gunKilled[kill+1] and timeDeath[kill] < 100000:
 				#double kill found
 				print('found double')
 				add = False
+				continue
 			else:
 				confirmedKills += 1
 				results[gunNumber]=confirmedKills
 
+			print(add)
+			print(kill)
 			if (add == True) or (kill == 0):
 				if gunKilled[kill] < 30:
 					
