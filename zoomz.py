@@ -175,7 +175,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 				confirmedKills += 1
 				results[gunNumber]=confirmedKills
 
-			if add or kill == 0:
+			if (add == True) or (kill == 0):
 				if gunKilled[kill] < 30:
 					
 					if gunKiller[kill] % 2 == 0:
