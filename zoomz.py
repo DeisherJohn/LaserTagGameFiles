@@ -155,9 +155,9 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 		morgue.sort() # kills sorted by gun
 		print(morgue)
 
-		timeDeath=np.diff(np.array(morgue)[:,2]) # time between kills
+		timeDeath = np.diff(np.array(morgue)[:,2]) # time between kills
 		gunKiller = np.array(morgue)[:,1]
-		gunKilled=np.array(morgue)[:,0] # array of guns killed
+		gunKilled = np.array(morgue)[:,0] # array of guns killed
 
 		print(timeDeath)
 
@@ -169,6 +169,7 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 
 			if gunKilled[kill] == gunKilled[kill+1] and timeDeath[kill] < 100000:
 				#double kill found
+				print('found double')
 				add = False
 			else:
 				confirmedKills += 1
