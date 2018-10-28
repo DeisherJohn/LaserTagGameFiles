@@ -167,14 +167,15 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 		for kill in range(len(gunKiller)):	
 			add = True
 
-			if gunKilled[kill] == gunKilled[kill+1] and timeDeath[kill] < 100000:
-				#double kill found
-				print('found double')
-				add = False
-				continue
-			else:
-				confirmedKills += 1
-				results[gunNumber]=confirmedKills
+			if kill < len(timeDeath):
+				if gunKilled[kill] == gunKilled[kill+1] and timeDeath[kill] < 100000:
+					#double kill found
+					print('found double')
+					add = False
+					continue
+				else:
+					confirmedKills += 1
+					results[gunNumber]=confirmedKills
 
 			print(add)
 			print(kill)
