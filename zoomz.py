@@ -69,7 +69,6 @@ def startGame(packetHandler, gunList = []):
 
 	try:
 		while stop:
-			print baseKill
 			end = time.time()
 			os.system('clear')
 
@@ -149,12 +148,12 @@ def analyzePackets(packetHandler, prntMatrix = ''):
 				morgue.append([packet.frame.msdu[3], packet.frame.msdu[4], packet.frame.timestamp])
         
 		if len(morgue) == 0: 
-			continue # gun not in
+			continue # no kils
 		
 		morgue.sort() # kills sorted by gun
 
 		timeDeath = np.diff(np.array(morgue)[:,2]) # time between kills
-		gunKiller = np.array(morgue)[:,1]
+		gunKiller = np.array(morgue)[:,1] #array for gun killers
 		gunKilled = np.array(morgue)[:,0] # array of guns killed
 
     	## look at list of guns killed and see if timestamps are less than 0.1 sec. apart
