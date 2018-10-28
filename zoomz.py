@@ -165,15 +165,14 @@ def analyzePackets(packetHandler, prntMatrix = ''):
         ## if so, then they're the same kill, so don't double count
 		confirmedKills=1
 		for kill in range(len(gunKiller)):	
-			add = False
+			add = True
 
-			if kill < len(timeDeath):
-				if gunKilled[kill] == gunKilled[kill+1] and timeDeath[kill] < 100000:
+			if kill > 0:
+				if gunKilled[kill] == gunKilled[kill - 1] and timeDeath[kill - 1] < 100000:
 					#double kill found
-					print('found double')
+					add = False
 					continue
 				else:
-					add = True
 					confirmedKills += 1
 					results[gunNumber]=confirmedKills
 
