@@ -51,353 +51,350 @@ class ZoomzLaserTag(object):
 		self.gameType = 'NULL'
 	pass
 
-def updateScreen(_startTime, _timeLimit):
-	current = time.time()
-	os.system('clear')
+	def updateScreen(_startTime, _timeLimit):
+		current = time.time()
+		os.system('clear')
 
-	secleft = _timeLimit - (current - _startTime)
-	minx = int(secleft / 60)
-	secx = int(secleft - (minx * 60))
+		secleft = _timeLimit - (current - _startTime)
+		minx = int(secleft / 60)
+		secx = int(secleft - (minx * 60))
 
-	if secleft < _timeLimit and secleft > 0:
-		print '\n\ntime left: %i:%02i' % (minx,secx)
-	else:
-		#game is over
-		return False
-
-	self.updateScore(packetHandler)
-	print 'Press ctrl+C to exit before timer\n'
-	return True
-
-def finalScore():
-	os.system('clear')
-	print '~~~~~~~~~~~~~~~~~FINAL SCORE~~~~~~~~~~~~~~~~~'
-	if self.baseKill == True:
-		if self.winner == 0:
-			print '~~~~~~~~~~~~~~~~~ Blue Team Wins ~~~~~~~~~~~~~~~~~'
+		if secleft < _timeLimit and secleft > 0:
+			print '\n\ntime left: %i:%02i' % (minx,secx)
 		else:
-			print '~~~~~~~~~~~~~~~~~ Red Team Wins ~~~~~~~~~~~~~~~~~'
+			#game is over
+			return False
 
-	self.updateScore(packetHandler)
+		self.updateScore(packetHandler)
 
-	print '\nPress [enter] to return to main menu'
-	a = raw_input('')
+		return True
 
-	if a == 'd':
-		analyzePackets(packetHandler, 'a')
+	def finalScore():
+		os.system('clear')
+		print '~~~~~~~~~~~~~~~~~FINAL SCORE~~~~~~~~~~~~~~~~~'
+		if self.baseKill == True:
+			if self.winner == 'blue':
+				print '~~~~~~~~~~~~~~~~~ Blue Team Wins ~~~~~~~~~~~~~~~~~'
+			elif self.winner == 'red':
+				print '~~~~~~~~~~~~~~~~~ Red Team Wins ~~~~~~~~~~~~~~~~~'
+
+		self.updateScore(packetHandler)
+		self.displayScore()
+
 		print '\nPress [enter] to return to main menu'
 		a = raw_input('')
 
 
-def TESTstartGame(packetHandler, gunList = []):
-	print 'Start game:'
+	def TESTstartGame(packetHandler, gunList = []):
+		print 'Start game:'
 
-	print 'How many minutes?'
-	print '[To back out type \'q\']'	
-	t = raw_input('-->')
-	if t == 'q' or t == 'Q':
-		return
+		print 'How many minutes?'
+		print '[To back out type \'q\']'	
+		t = raw_input('-->')
+		if t == 'q' or t == 'Q':
+			return
 
-	#set the time in seconds
-	t = int(t)
-	sc = t * 60
+		#set the time in seconds
+		t = int(t)
+		sc = t * 60
 
-	zoomzGun.newGame() #send a new game signal
-	packetHandler.captures = [] #clear the packets
-	os.system('clear') #clear the screen
-	print 'Game Start!'
+		zoomzGun.newGame() #send a new game signal
+		packetHandler.captures = [] #clear the packets
+		os.system('clear') #clear the screen
+		print 'Game Start!'
 
-	start = time.time()
-	stop = True
-	baseKill = False
-	winner = -1
+		start = time.time()
+		stop = True
+		baseKill = False
+		winner = -1
 
-	try:
-		while stop:
-			stop = self.updateScreen(start, sc)
-			time.sleep(1)
-
-			if self.baseKill == True:
-				break
-
-	except (KeyboardInterrupt, SystemExit):
-		zoomzGun.endGame()
-		stop = False
-    
-	zoomzGun.endGame()
-	self.finalScore()
-	
-
-
-def startGame(packetHandler, gunList = []):
-	
-	global baseKill
-	global winner
-
-	print 'Start game:'
-
-	print 'How many minutes?'
-	print '[To back out type \'q\']'	
-	t = raw_input('-->')
-	if t == 'q' or t == 'Q':
-		return
-
-	t = int(t)
-	sc = t * 60
-	zoomzGun.newGame()
-	packetHandler.captures = []
-	os.system('clear')
-	print 'Game Start!'
-
-	start = time.time()
-	stop = True
-	baseKill = False
-	winner = -1
-
-	try:
-		while stop:
-			end = time.time()
-			os.system('clear')
-
-			secleft = sc - (end - start)
-			minx = int(secleft / 60)
-			secx = int(secleft - (minx * 60))
-
-			if secleft < sc and secleft > 0:
-				
-				print '\n\ntime left: %i:%02i' % (minx,secx)
-				
-				analyzePackets(packetHandler)
+		try:
+			while stop:
+				stop = self.updateScreen(start, sc)
+				self.displayTopPlayers()
 
 				print 'Press ctrl+C to exit before timer\n'
 				time.sleep(1)
-			else: 
-				stop = False
 
-			if baseKill == True:
-				break
+				if self.baseKill == True:
+					break
 
-
-	except (KeyboardInterrupt, SystemExit):
+		except (KeyboardInterrupt, SystemExit):
+			zoomzGun.endGame()
+			stop = False
+	    
 		zoomzGun.endGame()
-		stop = False
-    
-	zoomzGun.endGame()
+		self.finalScore()
+		
 
-	os.system('clear')
-	print '~~~~~~~~~~~~~~~~~FINAL SCORE~~~~~~~~~~~~~~~~~'
-	if baseKill == True:
-		if winner == 0:
-			print '~~~~~~~~~~~~~~~~~ Blue Team Wins ~~~~~~~~~~~~~~~~~'
-		else:
-			print '~~~~~~~~~~~~~~~~~ Red Team Wins ~~~~~~~~~~~~~~~~~'
 
-	analyzePackets(packetHandler)
+	def startGame(packetHandler, gunList = []):
+		
+		global baseKill
+		global winner
 
-	print '\nPress [enter] to return to main menu'
-	a = raw_input('')
+		print 'Start game:'
 
-	if a == 'd':
+		print 'How many minutes?'
+		print '[To back out type \'q\']'	
+		t = raw_input('-->')
+		if t == 'q' or t == 'Q':
+			return
 
-		analyzePackets(packetHandler, 'a')
+		t = int(t)
+		sc = t * 60
+		zoomzGun.newGame()
+		packetHandler.captures = []
+		os.system('clear')
+		print 'Game Start!'
+
+		start = time.time()
+		stop = True
+		baseKill = False
+		winner = -1
+
+		try:
+			while stop:
+				end = time.time()
+				os.system('clear')
+
+				secleft = sc - (end - start)
+				minx = int(secleft / 60)
+				secx = int(secleft - (minx * 60))
+
+				if secleft < sc and secleft > 0:
+					
+					print '\n\ntime left: %i:%02i' % (minx,secx)
+					
+					analyzePackets(packetHandler)
+
+					print 'Press ctrl+C to exit before timer\n'
+					time.sleep(1)
+				else: 
+					stop = False
+
+				if baseKill == True:
+					break
+
+
+		except (KeyboardInterrupt, SystemExit):
+			zoomzGun.endGame()
+			stop = False
+	    
+		zoomzGun.endGame()
+
+		os.system('clear')
+		print '~~~~~~~~~~~~~~~~~FINAL SCORE~~~~~~~~~~~~~~~~~'
+		if baseKill == True:
+			if winner == 0:
+				print '~~~~~~~~~~~~~~~~~ Blue Team Wins ~~~~~~~~~~~~~~~~~'
+			else:
+				print '~~~~~~~~~~~~~~~~~ Red Team Wins ~~~~~~~~~~~~~~~~~'
+
+		analyzePackets(packetHandler)
+
 		print '\nPress [enter] to return to main menu'
 		a = raw_input('')
 
-def showTeamMatrix():
-	blueMatrix = np.zeros((14,14))
-		redMatrix = np.zeros((14,14))
+		if a == 'd':
 
-		for row in range(30):
-			for column in range(30):
-				if row % 2 == 0:
-					#blue row
-					if column % 2 == 1:
-						#red column, add this to blue?
-						blueMatrix[int(row // 2), int((column //2) + 1)]
+			analyzePackets(packetHandler, 'a')
+			print '\nPress [enter] to return to main menu'
+			a = raw_input('')
+
+	def showTeamMatrix():
+		blueMatrix = np.zeros((14,14))
+			redMatrix = np.zeros((14,14))
+
+			for row in range(30):
+				for column in range(30):
+					if row % 2 == 0:
+						#blue row
+						if column % 2 == 1:
+							#red column, add this to blue?
+							blueMatrix[int(row // 2), int((column //2) + 1)]
+						else:
+							continue
 					else:
-						continue
-				else:
-					#red row
-					if column % 2 == 0:
-						redMatrix[int((row // 2)+1), int(column //2)]
-					else:
-						continue
-	pass
+						#red row
+						if column % 2 == 0:
+							redMatrix[int((row // 2)+1), int(column //2)]
+						else:
+							continue
+		pass
 
-
-def displayScore():
-	#display player rankings or team matrix
-	os.system('clear')
-	print('Display which type: [R]ankings or [M]atrix: ')
-	AG = raw_input('-->')
-
-	if len(AG) == 0:
-		AG = 'R'
-	elif AG[0] == 'm' or AG[0] == 'M':
-		#display kill matrix in team form. 
-		self.showTeamMatrix()
-	else:
+	def displayTopPlayers():
 		sortedList = []
-		for gun in len(self.killList):
-			sortedList.append((killList[gun], gun))
+			for gun in len(self.killList):
+				sortedList.append((killList[gun], gun))
 
-		sortedList.sort()
+			sortedList.sort()
 
-		print('TOP FIVE PLAYERS')
-		for x in range(5):
-			print(x + ' ' + sortedList[x])
+			print('TOP FIVE PLAYERS')
+			for x in range(5):
+				print(x + ' ' + sortedList[x])
+
+	def displayScore():
+		#display player rankings or team matrix
+		os.system('clear')
+		print('Display which type: [R]ankings or [M]atrix: ')
+		AG = raw_input('-->')
+
+		if len(AG) == 0:
+			AG = 'R'
+		elif AG[0] == 'm' or AG[0] == 'M':
+			#display kill matrix in team form. 
+			self.showTeamMatrix()
+		else:
+			self.displayTopPlayers()
 
 
-
-
-
-
-def updateScore(_packetBuffer):
-	#used to sort out any new packets
-	#data structures
-	
-	packetData = []
-
-	while _packetBuffer.captures:
-		#sort through all the different incoming packets
-
-		packet = _packetBuffer.captures[0]
-		if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and packet.frame.msdu[4] < 50 and len(packet.frame.msdu) > 4:
-			#packet is a kill, add to main list
-			packetData.append([packet.frame.msdu[3], packet.frame.msdu[4], packet.frame.timestamp])
-		del packet
-
-	if len(packetData) == 0:
-		#no kills, move on
-		continue
-
-	packetData.sort()
-
-	timeDeath = np.diff(np.array(packetData)[:,2]) # time between kills
-	killer = np.array(packetData)[:,1] #array for gun killers
-	victim = np.array(packetData)[:,0] # array of guns killed
-
-	for kill in len(victim):
-
-		if kill > 0:
-			if victim[kill] == victim[kill - 1] and abs(timeDeath[kill - 1]) < 100000:
-				#double kill found
-				if victim[kill] > 30:
-					self.baseKill = True
-					if victim[kill] % 2 == 0:
-						#blue base killed
-						self.winner = 'red'
-					else:
-						self.winner = 'blue'
-				continue
+	def updateScore(_packetBuffer):
+		#used to sort out any new packets
+		#data structures
 		
-		#add kill to the passed in data Structs
-		self.killMatrix[int(victim[kill]), int(killer[kill])] += 1
-		self.killList[int(killer[kill])] += 1
-					
+		packetData = []
 
+		while _packetBuffer.captures:
+			#sort through all the different incoming packets
 
+			packet = _packetBuffer.captures[0]
+			if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and packet.frame.msdu[4] < 50 and len(packet.frame.msdu) > 4:
+				#packet is a kill, add to main list
+				packetData.append([packet.frame.msdu[3], packet.frame.msdu[4], packet.frame.timestamp])
+			del packet
 
-def analyzePackets(packetHandler, prntMatrix = ''):
-	"""analyze packet captures and print out kills"""
-	global baseKill
-	global winner
+		if len(packetData) == 0:
+			#no kills, move on
+			continue
 
-	blue=0
-	red=0
-	results=np.zeros(50)
+		packetData.sort()
 
-	totalMatrix = np.zeros((30,30))
-	blueMatrix = np.zeros((14,14))
-	redMatrix = np.zeros((14,14))
+		timeDeath = np.diff(np.array(packetData)[:,2]) # time between kills
+		killer = np.array(packetData)[:,1] #array for gun killers
+		victim = np.array(packetData)[:,0] # array of guns killed
 
-	for x in range(14):
-		blueMatrix[0,x] = (x * 2) - 1
-		blueMatrix[x,0] = x * 2
-		
-		redMatrix[x,0] = (x * 2) - 1
-		redMatrix[0,x] = x * 2
-
-	for gunNumber in range(50):
-		morgue=[]
-		for packet in packetHandler.captures:
-			if len(packet.frame.msdu) < 5: 
-				continue
-			if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and gunNumber == packet.frame.msdu[4]:
-                # append time and gun killed to list
-				morgue.append([packet.frame.msdu[3], packet.frame.msdu[4], packet.frame.timestamp])
-        
-		if len(morgue) == 0: 
-			continue # no kils
-		
-		morgue.sort() # kills sorted by gun
-
-		timeDeath = np.diff(np.array(morgue)[:,2]) # time between kills
-		gunKiller = np.array(morgue)[:,1] #array for gun killers
-		gunKilled = np.array(morgue)[:,0] # array of guns killed
-
-    	## look at list of guns killed and see if timestamps are less than 0.1 sec. apart
-        ## if so, then they're the same kill, so don't double count
-		confirmedKills=1
-		for kill in range(len(gunKiller)):	
-			add = True
+		for kill in len(victim):
 
 			if kill > 0:
-				if gunKilled[kill] == gunKilled[kill - 1] and abs(timeDeath[kill - 1]) < 100000:
+				if victim[kill] == victim[kill - 1] and abs(timeDeath[kill - 1]) < 100000:
 					#double kill found
-					add = False
+					if victim[kill] > 30:
+						self.baseKill = True
+						if victim[kill] % 2 == 0:
+							#blue base killed
+							self.winner = 'red'
+						else:
+							self.winner = 'blue'
 					continue
-				else:
-					confirmedKills += 1
-					results[gunNumber]=confirmedKills
+			
+			#add kill to the passed in data Structs
+			self.killMatrix[int(victim[kill]), int(killer[kill])] += 1
+			self.killList[int(killer[kill])] += 1
+						
 
-			if (add == True):
-				if gunKilled[kill] < 30:
-					
-					if gunKiller[kill] % 2 == 0:
-						#blue killer
-						killed = int((gunKiller[kill] // 2)+1)
-						killer = int(gunKilled[kill] // 2)
-						blueMatrix[killer, killed] += 1
+
+
+	def analyzePackets(packetHandler, prntMatrix = ''):
+		"""analyze packet captures and print out kills"""
+		global baseKill
+		global winner
+
+		blue=0
+		red=0
+		results=np.zeros(50)
+
+		totalMatrix = np.zeros((30,30))
+		blueMatrix = np.zeros((14,14))
+		redMatrix = np.zeros((14,14))
+
+		for x in range(14):
+			blueMatrix[0,x] = (x * 2) - 1
+			blueMatrix[x,0] = x * 2
+			
+			redMatrix[x,0] = (x * 2) - 1
+			redMatrix[0,x] = x * 2
+
+		for gunNumber in range(50):
+			morgue=[]
+			for packet in packetHandler.captures:
+				if len(packet.frame.msdu) < 5: 
+					continue
+				if (packet.frame.msdu[2] == 32 or packet.frame.msdu[2] == 37) and gunNumber == packet.frame.msdu[4]:
+	                # append time and gun killed to list
+					morgue.append([packet.frame.msdu[3], packet.frame.msdu[4], packet.frame.timestamp])
+	        
+			if len(morgue) == 0: 
+				continue # no kils
+			
+			morgue.sort() # kills sorted by gun
+
+			timeDeath = np.diff(np.array(morgue)[:,2]) # time between kills
+			gunKiller = np.array(morgue)[:,1] #array for gun killers
+			gunKilled = np.array(morgue)[:,0] # array of guns killed
+
+	    	## look at list of guns killed and see if timestamps are less than 0.1 sec. apart
+	        ## if so, then they're the same kill, so don't double count
+			confirmedKills=1
+			for kill in range(len(gunKiller)):	
+				add = True
+
+				if kill > 0:
+					if gunKilled[kill] == gunKilled[kill - 1] and abs(timeDeath[kill - 1]) < 100000:
+						#double kill found
+						add = False
+						continue
 					else:
-						killer = int((gunKiller[kill] // 2)+1)
-						killed = int(gunKilled[kill] // 2)
+						confirmedKills += 1
+						results[gunNumber]=confirmedKills
 
-						redMatrix[killer, killed] += 1
+				if (add == True):
+					if gunKilled[kill] < 30:
+						
+						if gunKiller[kill] % 2 == 0:
+							#blue killer
+							killed = int((gunKiller[kill] // 2)+1)
+							killer = int(gunKilled[kill] // 2)
+							blueMatrix[killer, killed] += 1
+						else:
+							killer = int((gunKiller[kill] // 2)+1)
+							killed = int(gunKilled[kill] // 2)
 
-					totalMatrix[int(gunKilled[kill]), int(gunKiller[kill])] += 1
-				else:
-					baseKill = True
+							redMatrix[killer, killed] += 1
 
-					if gunKilled[kill] % 2 == 0:
-						#blue team wins
-						winner = 0
+						totalMatrix[int(gunKilled[kill]), int(gunKiller[kill])] += 1
 					else:
-						#Red team wins
-						winner = 1
+						baseKill = True
 
-		if gunNumber % 2 == 0:
-			blue += confirmedKills
-		else:
-			red += confirmedKills
+						if gunKilled[kill] % 2 == 0:
+							#blue team wins
+							winner = 0
+						else:
+							#Red team wins
+							winner = 1
 
-		if len(prntMatrix) > 0:
-			print '~~~~~~~~ Blue Kill Matrix ~~~~~~~~~~~'
-			print blueMatrix
+			if gunNumber % 2 == 0:
+				blue += confirmedKills
+			else:
+				red += confirmedKills
 
-			print '~~~~~~~~ Red Kill Matrix ~~~~~~~~~~~'
-			print redMatrix
+			if len(prntMatrix) > 0:
+				print '~~~~~~~~ Blue Kill Matrix ~~~~~~~~~~~'
+				print blueMatrix
 
-	print '\nred kills: %i ' % red
-	print 'blue kills: %i ' % blue
+				print '~~~~~~~~ Red Kill Matrix ~~~~~~~~~~~'
+				print redMatrix
 
-    # print out high score    
-	ind=np.where(results == np.max(results))[0]
-	if len(ind) < 10:
-		for ii in ind:
-			print 'best score by gun %i with %i kills' % (ii,results[ii])
-	else: 
-		print 'too many best scores!'
+		print '\nred kills: %i ' % red
+		print 'blue kills: %i ' % blue
+
+	    # print out high score    
+		ind=np.where(results == np.max(results))[0]
+		if len(ind) < 10:
+			for ii in ind:
+				print 'best score by gun %i with %i kills' % (ii,results[ii])
+		else: 
+			print 'too many best scores!'
 
 	
 def main():
@@ -468,7 +465,7 @@ def main():
 
 		if len(MM) == 0:
 			#do new game here
-			startGame(packetHandler, gunList)
+			ZoomzLaserTag.startGame(packetHandler, gunList)
 		elif MM == 'a' or MM == 'A':
 			#do gamemode select here
 			gameType = zoomzGun.setupGame(gunList)
@@ -477,7 +474,7 @@ def main():
 			zoomzGun.setupGun(gunList)
 		elif MM == 'c' or MM == 'C':
 			#Do gun options here
-			startGame(packetHandler,  gunList)
+			ZoomzLaserTag.startGame(packetHandler,  gunList)
 		elif MM == 'd' or MM == 'D':
 			#Do gun options here
 			zoomzGun.endGame(gunList)
@@ -486,7 +483,7 @@ def main():
 			os.system('clear')
 			return 0
 		else: 
-			startGame(packetHandler,  gunList)
+			ZoomzLaserTag.startGame(packetHandler,  gunList)
 
 
 if __name__ == '__main__': 
